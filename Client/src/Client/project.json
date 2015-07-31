@@ -4,18 +4,10 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "EntityFramework.SqlServer": "7.0.0-beta4",
     "EntityFramework.Commands": "7.0.0-beta4",
     "Microsoft.AspNet.Mvc": "6.0.0-beta4",
     "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Cookies": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Facebook": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Google": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.MicrosoftAccount": "1.0.0-beta4",
-    "Microsoft.AspNet.Authentication.Twitter": "1.0.0-beta4",
     "Microsoft.AspNet.Diagnostics": "1.0.0-beta4",
-    "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-beta4",
-    "Microsoft.AspNet.Identity.EntityFramework": "3.0.0-beta4",
     "Microsoft.AspNet.Server.IIS": "1.0.0-beta4",
     "Microsoft.AspNet.Server.WebListener": "1.0.0-beta4",
     "Microsoft.AspNet.StaticFiles": "1.0.0-beta4",
@@ -29,9 +21,7 @@
   },
 
   "commands": {
-    "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5000",
-    "gen": "Microsoft.Framework.CodeGeneration",
-    "ef":  "EntityFramework.Commands"
+    "web": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5001",
   },
 
   "frameworks": {

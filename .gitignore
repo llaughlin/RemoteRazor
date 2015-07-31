@@ -4,3 +4,6 @@ bower_components/
 bin/
 obj/
 lib/
+*.suo
+*.user
+*.lock.json
