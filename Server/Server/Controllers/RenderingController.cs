@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.Entity.Core.Objects;
+using System.Net.Http;
+using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 
@@ -10,11 +12,11 @@ namespace Server.Controllers
         // GET: Rendering
         public ActionResult Index()
         {
-            var model = new RenderingModel("on the server", DateTime.Now);
-            var ipAddress = this.DetectRequestIp();
-            if (!ipAddress.IsNullOrWhiteSpace())
+            var model = new RenderingModel("on the server");
+            var remoteIp = Request.GetRemoteIp();
+            if (!remoteIp.IsNullOrWhiteSpace())
             {
-                var remotelyRenderedView = VirtualRenderer.RenderView(this, model, ipAddress);
+                var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteIp);
             }
             return View(model);
         }
@@ -22,10 +24,10 @@ namespace Server.Controllers
 
     public class RenderingModel
     {
-        public RenderingModel(string origin, DateTime now)
+        public RenderingModel(string origin)
         {
             Origin = origin;
-            Time = now;
+            Time = DateTime.Now;
         }
 
         public DateTime Time { get; set; }
@@ -40,11 +42,11 @@ namespace Server.Controllers
             throw new System.NotImplementedException();
         }
     }
+}
     public static class IpControllerExtensions
     {
-        public static string DetectRequestIp(this Controller controller)
+        public static string GetRemoteIp(this HttpRequestBase request)
         {
-            return controller.Request.Params.Get("designerIp");
+            return request.Params.Get("RemoteRenderIp");
         }
     }
-}

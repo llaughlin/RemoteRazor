@@ -7,3 +7,5 @@ lib/
 *.suo
 *.user
 *.lock.json
+_references.js
+applicationhost.config

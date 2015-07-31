@@ -22,8 +22,7 @@ namespace Client
         {
             // Setup configuration sources.
             var configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddJsonFile($"config.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile("config.json");
 
             if (env.IsEnvironment("Development"))
             {
