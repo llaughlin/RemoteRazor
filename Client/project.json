@@ -14,7 +14,8 @@
     "Microsoft.Framework.Configuration.Json": "1.0.0-beta6",
     "Microsoft.Framework.Logging": "1.0.0-beta6",
     "Microsoft.Framework.Logging.Console": "1.0.0-beta6",
-    "Kestrel": "1.0.0-beta6"
+    "Kestrel": "1.0.0-beta6",
+    "Microsoft.Net.Http.Client": "1.0.0-beta6"
   },
 
   "commands": {
@@ -23,7 +24,7 @@
   },
 
   "frameworks": {
-    "dnx451": {},
+    "dnx451": {"frameworkAssemblies": {}},
   },
 
   "exclude": [
