@@ -27,7 +27,7 @@ namespace Server.Controllers
         public RenderingModel(string origin)
         {
             Origin = origin;
-            Time = DateTime.Now;
+            Time = DateTime.UtcNow;
         }
 
         public DateTime Time { get; set; }
