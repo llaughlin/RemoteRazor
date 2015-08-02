@@ -9,13 +9,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http.Features;
 using Microsoft.Net.Http.Client;
+using Newtonsoft.Json;
 
 namespace Client.Controllers
 {
     public class RenderingController : Controller
     {
+        private ILogger Logger { get; set; }
+
+        public RenderingController(ILoggerFactory loggerFactory)
+        {
+            Logger = loggerFactory.CreateLogger<RenderingController>();
+        }
+
         public async Task<IActionResult> Index()
         {
+            Logger.LogDebug("Hit the Index action");
+            var model = new RenderingModel("on the client");
+            Logger.LogDebug($"Rendering model {JsonConvert.SerializeObject(model, Formatting.Indented)}");
+
+            return View(model);
             var localIp = this.GetLocalIpAddress();
 
             var thorRequest = GetRequestFromContext(Context);
@@ -120,7 +133,7 @@ namespace Client.Controllers
         public RenderingModel(string origin)
         {
             Origin = origin;
-            Time = DateTime.Now;
+            Time = DateTime.UtcNow;
         }
 
         public DateTime Time { get; set; }

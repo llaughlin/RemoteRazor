@@ -42,8 +42,8 @@ namespace Client
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.MinimumLevel = LogLevel.Information;
-            loggerFactory.AddConsole();
+            loggerFactory.MinimumLevel = LogLevel.Debug;
+            loggerFactory.AddConsole(LogLevel.Debug);
 
             // Configure the HTTP request pipeline.
 
@@ -65,6 +65,9 @@ namespace Client
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
+//                routes.MapRoute(name: "catchall",
+//                    template: "*/*",
+//                    defaults: new {controller = "Rendering", action = "Index"});
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

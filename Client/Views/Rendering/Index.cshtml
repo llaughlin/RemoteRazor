@@ -1,0 +1,15 @@
+@model Client.Controllers.RenderingModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Client's Index.html</title>
+</head>
+<body>
+    <div>
+        <h1>Origin: @Model.Origin</h1>
+        <h3>Time: @Model.Time.ToLocalTime().ToLongTimeString()</h3>
+    </div>
+</body>
+</html>
