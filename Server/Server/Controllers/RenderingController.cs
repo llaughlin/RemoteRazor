@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 
 namespace Server.Controllers
 {
@@ -12,8 +13,9 @@ namespace Server.Controllers
         // GET: Rendering
         public ActionResult Index()
         {
-            var model = new RenderingModel("on the server");
+            var model = new RenderingModel(JsonConvert.SerializeObject(new { Server, ModelState}, Formatting.Indented));
             var remoteIp = Request.GetRemoteIp();
+            return View(model);
             if (!remoteIp.IsNullOrWhiteSpace())
             {
                 var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteIp);
@@ -24,15 +26,15 @@ namespace Server.Controllers
 
     public class RenderingModel
     {
-        public RenderingModel(string origin)
+        public RenderingModel(string data)
         {
-            Origin = origin;
+            Data = data;
             Time = DateTime.UtcNow;
         }
 
         public DateTime Time { get; set; }
 
-        public string Origin { get; set; }
+        public string Data { get; set; }
     }
 
     public class VirtualRenderer
@@ -47,6 +49,6 @@ namespace Server.Controllers
     {
         public static string GetRemoteIp(this HttpRequestBase request)
         {
-            return request.Params.Get("RemoteRenderIp");
+            return request.Headers.Get("RenderingAddress");
         }
     }

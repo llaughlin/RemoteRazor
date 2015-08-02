@@ -8,8 +8,9 @@
 </head>
 <body>
     <div>
-        <h1>Origin: @Model.Origin</h1>
-        <h3>Time: @Model.Time.ToLocalTime().ToLongTimeString()</h3>
+        <h1>Time: @Model.Time.ToLocalTime().ToLongTimeString()</h1>
+        <div>Data: @Model.Data</div>
+        <div>This content was rendered on the client</div>
     </div>
 </body>
 </html>

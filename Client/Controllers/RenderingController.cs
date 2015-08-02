@@ -7,7 +7,9 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http.Features;
+using Microsoft.Framework.Runtime;
 using Microsoft.Net.Http.Client;
 using Newtonsoft.Json;
 
@@ -16,28 +18,32 @@ namespace Client.Controllers
     public class RenderingController : Controller
     {
         private ILogger Logger { get; set; }
+        private IApplicationEnvironment ApplicationEnvironment { get; set; }
+        private IHostingEnvironment HostingEnvironment { get; set; }
 
-        public RenderingController(ILoggerFactory loggerFactory)
+        public RenderingController(IHostingEnvironment hostingEnvironment, IApplicationEnvironment applicationEnvironment, ILoggerFactory loggerFactory)
         {
+            HostingEnvironment = hostingEnvironment;
+            ApplicationEnvironment = applicationEnvironment;
             Logger = loggerFactory.CreateLogger<RenderingController>();
         }
+
 
         public async Task<IActionResult> Index()
         {
             Logger.LogDebug("Hit the Index action");
-            var model = new RenderingModel("on the client");
+            var model = new RenderingModel(JsonConvert.SerializeObject(new { HostingEnvironment, ApplicationEnvironment}, Formatting.Indented));
             Logger.LogDebug($"Rendering model {JsonConvert.SerializeObject(model, Formatting.Indented)}");
 
-            return View(model);
-            var localIp = this.GetLocalIpAddress();
+            var localAddress = Context.GetLocalAddress();
 
             var thorRequest = GetRequestFromContext(Context);
-            thorRequest.AttachIpAddress(localIp);
+            thorRequest.AttachRequestAddress(localAddress);
 
             SetRequestHost(thorRequest, Context, GetRemoteUrl());
             //            Logger.LogInformation($"Proxy request={externRequest.ToJson()}");
             var response = await new HttpClient().SendAsync(thorRequest);
-            await SetResponse(Context.Response, response);
+            await SetResponse(Response, response);
 
             return View();
         }
@@ -125,34 +131,42 @@ namespace Client.Controllers
         }
         public static string GetRemoteUrl()
         {
-            return "http://localhost:12977";
+            return "localhost:12977";
         }
     }
     public class RenderingModel
     {
-        public RenderingModel(string origin)
+        public RenderingModel(string data)
         {
-            Origin = origin;
+            Data = data;
             Time = DateTime.UtcNow;
         }
 
         public DateTime Time { get; set; }
 
-        public string Origin { get; set; }
+        public string Data { get; set; }
     }
 
     public static class Extensions
     {
-        public static void AttachIpAddress(this HttpRequestMessage request, string ipAddress)
+        public static void AttachRequestAddress(this HttpRequestMessage request, string address)
         {
-            var query = request.GetPathAndQueryProperty();
+            request.Headers.Add("RenderingAddress", address);
         }
 
-        public static string GetLocalIpAddress(this Controller controller)
+        public static string GetLocalIpAddress(this HttpContext context)
         {
-            return controller.Context.GetFeature<IHttpConnectionFeature>()?.LocalIpAddress.ToString();
+            return context.GetFeature<IHttpConnectionFeature>()?.LocalIpAddress.ToString();
         }
 
+        public static string GetLocalPort(this HttpContext context)
+        {
+            return context.GetFeature<IHttpConnectionFeature>()?.LocalPort.ToString();
+        }
 
+        public static string GetLocalAddress(this HttpContext context)
+        {
+            return $"{context.GetLocalIpAddress()}:{context.GetLocalPort()}";
+        }
     }
 }
