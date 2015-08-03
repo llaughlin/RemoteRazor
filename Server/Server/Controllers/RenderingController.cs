@@ -11,15 +11,18 @@ namespace Server.Controllers
         // GET: Rendering
         public ActionResult Index()
         {
-            var model = new RenderingModel(JsonConvert.SerializeObject(new { Server, ModelState}, Formatting.Indented));
-            var remoteAddress = Request.GetRemoteAddress();
-            var localView = View(model);
-            if (remoteAddress.IsNullOrWhiteSpace()) return View(model);
+            var model = new RenderingModel(JsonConvert.SerializeObject(new { Server, ModelState }, Formatting.Indented));
 
-            return Json(new {ViewData, localView, RouteData}, JsonRequestBehavior.AllowGet);
+            //Comented out to always try new Virtual code
+            //var remoteAddress = Request.GetRemoteAddress();
+            //if (remoteAddress.IsNullOrWhiteSpace()) return View(model);
 
-            var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteAddress);
-            return remotelyRenderedView;
+            var actionName = RouteData.GetRequiredString("action");
+            var foundView = ViewEngineCollection.FindView(ControllerContext, actionName, null);
+            var razorView = (RazorView)foundView.View;
+            var viewPath = razorView.ViewPath;
+            return View("~/Views/VIRTUAL/" + viewPath.Substring(1), model);
+
         }
     }
 
@@ -36,13 +39,6 @@ namespace Server.Controllers
         public string Data { get; set; }
     }
 
-    public class VirtualRenderer
-    {
-        public static ActionResult RenderView(Controller controller, RenderingModel model, string address)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
     public static class IpControllerExtensions
     {

@@ -41,10 +41,11 @@ namespace Client.Controllers
 
             SetRequestHost(thorRequest, Context, GetRemoteUrl());
             //            Logger.LogInformation($"Proxy request={externRequest.ToJson()}");
+
             var response = await new HttpClient().SendAsync(thorRequest);
             await SetResponse(Response, response);
 
-            return View();
+            return new ContentResult();
         }
         public async Task SetResponse(HttpResponse response, HttpResponseMessage responseMessage)
         {
