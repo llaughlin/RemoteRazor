@@ -1,7 +1,12 @@
 ﻿using System;
+using System.EnterpriseServices;
+using System.IO;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using Microsoft.Ajax.Utilities;
+using Microsoft.Web.Infrastructure;
 using Newtonsoft.Json;
 
 namespace Server.Controllers
@@ -13,11 +18,10 @@ namespace Server.Controllers
         {
             var model = new RenderingModel(JsonConvert.SerializeObject(new { Server, ModelState}, Formatting.Indented));
             var remoteAddress = Request.GetRemoteAddress();
+            var viewPath = this.GetActionViewPath();
             var localView = View(model);
-            if (remoteAddress.IsNullOrWhiteSpace()) return View(model);
-
-            return Json(new {ViewData, localView, RouteData}, JsonRequestBehavior.AllowGet);
-
+//            if (remoteAddress.IsNullOrWhiteSpace()) return localView;
+            return Json(new {localView, viewPath}, JsonRequestBehavior.AllowGet);
             var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteAddress);
             return remotelyRenderedView;
         }
@@ -51,3 +55,16 @@ namespace Server.Controllers
             return request.Headers.Get("RenderingAddress");
         }
     }
+
+public static class ControllerExtensions
+{
+    public static string GetActionViewPath(this Controller controller)
+    {
+        var actionName = controller.RouteData.GetRequiredString("action");
+        var foundView = controller.ViewEngineCollection.FindView(controller.ControllerContext, actionName, null);
+        var razorView = (RazorView) foundView.View;
+        var viewPath = razorView.ViewPath;
+
+        return viewPath;
+    }
+}
