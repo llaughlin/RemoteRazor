@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Core.Objects;
-using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
@@ -14,13 +12,14 @@ namespace Server.Controllers
         public ActionResult Index()
         {
             var model = new RenderingModel(JsonConvert.SerializeObject(new { Server, ModelState}, Formatting.Indented));
-            var remoteIp = Request.GetRemoteIp();
-            return View(model);
-            if (!remoteIp.IsNullOrWhiteSpace())
-            {
-                var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteIp);
-            }
-            return View(model);
+            var remoteAddress = Request.GetRemoteAddress();
+            var localView = View(model);
+            if (remoteAddress.IsNullOrWhiteSpace()) return View(model);
+
+            return Json(new {ViewData, localView, RouteData}, JsonRequestBehavior.AllowGet);
+
+            var remotelyRenderedView = VirtualRenderer.RenderView(this, model, remoteAddress);
+            return remotelyRenderedView;
         }
     }
 
@@ -39,15 +38,15 @@ namespace Server.Controllers
 
     public class VirtualRenderer
     {
-        public static ActionResult RenderView(Controller controller, RenderingModel address, string ipAddress)
+        public static ActionResult RenderView(Controller controller, RenderingModel model, string address)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
     public static class IpControllerExtensions
     {
-        public static string GetRemoteIp(this HttpRequestBase request)
+        public static string GetRemoteAddress(this HttpRequestBase request)
         {
             return request.Headers.Get("RenderingAddress");
         }

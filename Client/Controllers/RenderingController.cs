@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http.Features;
 using Microsoft.Framework.Runtime;
-using Microsoft.Net.Http.Client;
 using Newtonsoft.Json;
 
 namespace Client.Controllers
