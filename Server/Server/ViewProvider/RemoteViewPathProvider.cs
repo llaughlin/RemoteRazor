@@ -69,7 +69,7 @@ namespace Server.ViewProvider
 
             private void GetContent()
             {
-                if (IsPathVirtual(VirtualPath))
+                if (IsPathVirtual(VirtualPath) && !VirtualPath.Contains("_ViewStart"))
                 {
                     // your GetTemplateByPath method would need to split the virtualPath string to retrieve
                     // proper file
