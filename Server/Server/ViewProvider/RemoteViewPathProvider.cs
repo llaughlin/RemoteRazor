@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Hosting;
+using System.Web.UI.WebControls;
 
 namespace Server.ViewProvider
 {
@@ -93,22 +94,13 @@ namespace Server.ViewProvider
     {
         public string GetTemplateByPath(string virtualPath)
         {
-            return 
+            return
                 "@model Server.Controllers.RenderingModel \r\n"
-                   + "< !DOCTYPE html >"
-                   + ""
-                   + "< html >"
-                   + "< head >"
-                   + "< title > Client's Index.html</title>"
-                   + "</ head >"
-                   + "< body >"
-                   + "< div >\r\n"
-                   + "< h1 > Time: @Model.Time.ToLocalTime().ToLongTimeString() </ h1 > \r\n"
-                   + "< div > Data: @Model.Data </ div >\r\n"
-                   + "< div > This content was rendered on the server - using CLIENT file</ div >\r\n"
-                   + "</ div >\r\n"
-                   + "</ body >"
-                   + "</ html >";
+                + "<div>\r\n"
+                + "<h1> Time: @Model.Time.ToLocalTime().ToLongTimeString() </h1> \r\n"
+                + "<div> Data: @Model.Data </div>\r\n"
+                + "<div> This content was rendered on the server - using CLIENT file</div>\r\n"
+                + "</div>\r\n";
         }
     }
 }

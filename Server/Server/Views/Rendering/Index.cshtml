@@ -1,16 +1,7 @@
 ﻿@model Server.Controllers.RenderingModel
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title>Server's Index.html</title>
-</head>
-<body>
 <div>
     <h1>Time: @Model.Time.ToLocalTime().ToLongTimeString()</h1>
     <div>Data: @Model.Data</div>
     <div>This content was rendered on the server</div>
 </div>
-</body>
-</html>
